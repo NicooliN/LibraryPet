@@ -1,8 +1,9 @@
 services:
   postgres:
-    image: 'postgres:latest'
+    container_name: libraryPet
+    image: postgres
     environment:
-      - 'POSTGRES_DB=libraryPet'
+      - 'POSTGRES_DB=library_db'
       - 'POSTGRES_PASSWORD=secret'
       - 'POSTGRES_USER=user'
     ports:
