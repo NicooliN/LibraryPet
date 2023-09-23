@@ -22,8 +22,8 @@ public class Author extends GenericModel{
     @Column(name = "description")
     private String description;
 
-    @Column(name = "bith_date")
-    private LocalDate bithDate;
+    @Column(name = "birth_date")
+    private LocalDate birthDate;
 
     @ManyToMany(mappedBy = "authors")
     private Set<Book> books;
