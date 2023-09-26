@@ -15,11 +15,11 @@ import java.util.Set;
 public class AuthorDTO
         extends GenericDTO {
 
-    private String fio;
-
-    private String description;
+    private String authorFio;
 
     private LocalDate birthDate;
+
+    private String description;
 
     private Set<Long> booksIds;
 }

@@ -7,12 +7,13 @@ public enum Genre {
     SINCE_FICTION("Научная фантастика"),
     NOVEL("Роман");
 
-    private final String genreDisplayValue;
+    private final String genreTextDisplay;
+
     Genre(String text) {
-        this.genreDisplayValue = text;
+        this.genreTextDisplay = text;
     }
 
-    public String getGenreDisplayValue(){
-        return this.genreDisplayValue;
+    public String getGenreTextDisplay() {
+        return this.genreTextDisplay;
     }
 }

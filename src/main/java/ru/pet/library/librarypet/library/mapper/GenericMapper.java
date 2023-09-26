@@ -1,12 +1,17 @@
 package ru.pet.library.librarypet.library.mapper;
 
+import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import ru.pet.library.librarypet.library.dto.GenericDTO;
+import ru.pet.library.librarypet.library.model.Book;
 import ru.pet.library.librarypet.library.model.GenericModel;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public abstract class GenericMapper <E extends GenericModel, D extends GenericDTO>
@@ -48,4 +53,29 @@ public abstract class GenericMapper <E extends GenericModel, D extends GenericDT
     public List<D> toDtos(List<E> entities) {
         return entities.stream().map(this::toDto).toList();
     }
+
+    Converter<E, D> toDTOConverter() {
+        return context -> {
+            E source = context.getSource();
+            D destination = context.getDestination();
+        mapSpecificFields(source, destination);
+        return context.getDestination();
+        };
+    }
+
+    Converter<D, E> toEntityConverter() {
+        return context -> {
+            D source = context.getSource();
+            E destination = context.getDestination();
+            mapSpecificFields(source, destination);
+            return context.getDestination();
+        };
+    }
+
+    protected abstract void mapSpecificFields(D source, E destination);
+
+    protected abstract void mapSpecificFields(E source, D destination);
+
+    protected abstract Set<Long> getIds(E entity);
+
 }

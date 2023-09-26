@@ -14,5 +14,5 @@ public abstract class GenericDTO {
 
     private String createdBy;
 
-    private LocalDateTime createdWen;
+    private LocalDateTime createdWhen;
 }

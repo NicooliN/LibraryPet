@@ -8,6 +8,7 @@ import ru.pet.library.librarypet.library.model.Author;
 import ru.pet.library.librarypet.library.model.BookRentInfo;
 import ru.pet.library.librarypet.library.model.Genre;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 @Getter @Setter
@@ -15,13 +16,13 @@ import java.util.Set;
 public class BookDTO
         extends GenericDTO {
 
-    private String title;
+    private String bookTitle;
 
-    private Integer publishDate;
-
-    private String publish;
+    private String publishDate;
 
     private Integer pageCount;
+
+    private Integer amount;
 
     private String storagePlace;
 
@@ -29,11 +30,7 @@ public class BookDTO
 
     private String description;
 
-    private Integer amount;
-
     private Genre genre;
 
     private Set<Long> authorsIds;
-
-    private Set<Long> bookRentInfosIds;
 }

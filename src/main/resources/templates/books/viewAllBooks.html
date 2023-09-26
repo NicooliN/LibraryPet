@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Книги библиотеки</title>
+    <style>
+        .book-link {
+            text-decoration: none;
+        }
+
+        .book-link:hover {
+            color: #001445;
+        }
+
+        .not-enough-book {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1>Все книги библиотеки</h1>
+    <div class="row">
+        <div class="col">
+            <a href="books/add"
+               class="btn btn-secondary"
+               role="button"
+               style="float: right"
+               aria-disabled="true">Добавить книгу</a>
+        </div>
+    </div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Название</th>
+            <th scope="col">Жанр</th>
+            <th scope="col">Место хранения</th>
+            <th scope="col">Количество</th>
+            <th scope="col">Дата публикации</th>
+            <th scope="col">Автор(ы)</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="book : ${books}">
+            <td>
+                <a class="book-link" th:href="'/books/' + ${book.getId()}" th:text="${book.getBookTitle()}"></a>
+            </td>
+            <td th:text="${book.getGenre().getGenreTextDisplay()}"></td>
+            <td th:text="${book.getStoragePlace()}"></td>
+            <td th:classappend="${book.getAmount() <= 0} ? 'not-enough-book'"
+                th:text="${book.getAmount()} <= 0 ? 'Нет в наличии' : ${book.getAmount()}"></td>
+            <td th:text="${book.getPublishDate()}"></td>
+            <td>
+                <ul>
+                    <li th:each="author : ${book.getAuthors()}" th:text="${author.getAuthorFio()}"></li>
+                </ul>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
