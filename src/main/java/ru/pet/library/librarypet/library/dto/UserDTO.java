@@ -17,12 +17,12 @@ public class UserDTO
     private String login;
     private String password;
     private String email;
-    private LocalDate birthDate;
+    private String birthDate;
     private String firstName;
     private String lastName;
     private String middleName;
     private String phone;
     private String address;
-    private Role role;
+    private RoleDTO role;
     private Set<Long> bookRentInfosIds;
 }

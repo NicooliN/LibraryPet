@@ -14,7 +14,7 @@ import ru.pet.library.librarypet.library.service.BookService;
 import java.util.List;
 
 @Controller
-@RequestMapping(value = "books")
+@RequestMapping(value = "/books")
 public class BookController
         {
 

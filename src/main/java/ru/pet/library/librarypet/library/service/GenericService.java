@@ -16,9 +16,9 @@ import java.util.List;
 @Service
 public abstract class GenericService<E extends GenericModel, D extends GenericDTO> {
 
-    private final GenericRepository<E> genericRepository;
+    protected final GenericRepository<E> genericRepository;
+    protected final GenericMapper<E, D> genericMapper;
 
-    private final GenericMapper<E, D> genericMapper;
 @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     protected GenericService(GenericRepository<E> genericRepository,
                              GenericMapper<E,D> genericMapper) {
@@ -34,7 +34,7 @@ public abstract class GenericService<E extends GenericModel, D extends GenericDT
     }
 
     public D create(D newObject) {
-    newObject.setCreatedBy("Admin");
+    newObject.setCreatedBy("ADMIN");
     newObject.setCreatedWhen(LocalDateTime.now());
         return genericMapper.toDto(genericRepository.save(genericMapper.toEntity(newObject)));
     }

@@ -11,13 +11,18 @@
     <title>Вход в Онлайн Библиотеку</title>
 </head>
 <body>
-<div layout:fragment="content" class="container-fluid mt-5 pt-5">
+<div layout:fragment="content" class="container-fluid mt-5">
     <form method="POST" th:action="@{/login}">
-        <div th:if="${param.error}">
-            <div class="alert alert-danger">
-                <p style="float: bottom">Неверный логин/пароль</p>
-            </div>
-        </div>
+<!--        <div th:if="${param.error}">-->
+<!--            <div class="alert alert-danger">-->
+<!--                <p style="float: bottom">Неверный логин/пароль</p>-->
+<!--            </div>-->
+<!--        </div>-->
+        <!--        <div th:if="${param.logout}">-->
+        <!--            <div class="alert alert-danger">-->
+        <!--                <p>Вы вышли из системы.</p>-->
+        <!--            </div>-->
+        <!--        </div>-->
         <div class="form-group col-md-3 offset-md-4 m-auto">
             <p class="h2" style="text-align:center">Вход в онлайн библиотеку</p>
         </div>

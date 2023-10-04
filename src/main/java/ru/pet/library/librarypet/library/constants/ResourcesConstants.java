@@ -7,9 +7,12 @@ public interface ResourcesConstants {
    final List<String> RESOURCES_WHITE_LIST = List.of("/resources/**",
             "/js/**",
             "/css/**",
+           "/webjars/bootstrap/5.0.2/**",
             "/");
 
-    final List<String> BOOKS_WHITE_LIST = List.of("/books");
+    final List<String> BOOKS_WHITE_LIST = List.of("/books",
+            "/books/search",
+            "/books/{id}");
 
     final List<String> BOOKS_PERMISSION_LIST =List.of("/books/add",
             "/books/update",
@@ -20,5 +23,5 @@ public interface ResourcesConstants {
              "/users/remember-password",
              "/users/change-password");
 
-     final List<String> USER_PERMISSION_LIST = List.of("/");
+
 }

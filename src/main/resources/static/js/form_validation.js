@@ -12,6 +12,13 @@ function validateForm() {
                     event.preventDefault()
                     event.stopPropagation()
                 }
+                // TODO: Проверка на жанр (что жанр выбран)
+                // if (genre.value === 'default') {
+                //     alert("Пожалуйста, выберете жанр!");
+                //     event.preventDefault()
+                //     event.stopPropagation()
+                //     return false;
+                // }
                 form.classList.add('was-validated')
             }, false)
         })
