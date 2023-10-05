@@ -1,23 +1,15 @@
 package ru.pet.library.librarypet.library.service;
 
 
-
 import ru.pet.library.librarypet.library.dto.RoleDTO;
 import ru.pet.library.librarypet.library.dto.UserDTO;
 import ru.pet.library.librarypet.library.mapper.UserMapper;
 import ru.pet.library.librarypet.library.model.User;
 import ru.pet.library.librarypet.library.repository.UserRepository;
-
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
-
 import java.time.LocalDateTime;
 
-
-import static ru.pet.library.librarypet.library.constants.UserRolesConstants.ADMIN;
 
 @Service
 public class UserService

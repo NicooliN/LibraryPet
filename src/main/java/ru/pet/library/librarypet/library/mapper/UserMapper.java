@@ -29,7 +29,7 @@ public class UserMapper
     @PostConstruct
     public void setupMapper() {
         modelMapper.createTypeMap(User.class, UserDTO.class)
-                .addMappings(m -> m.skip(UserDTO::setBookRentInfosIds)).setPostConverter(toDTOConverter());
+                .addMappings(m -> m.skip(UserDTO::setUserBooksRent)).setPostConverter(toDTOConverter());
         modelMapper.createTypeMap(UserDTO.class, User.class)
                 .addMappings(m -> m.skip(User::setBookRentInfos)).setPostConverter(toEntityConverter())
                 .addMappings(m -> m.skip(User::setBirthDate)).setPostConverter(toEntityConverter());
@@ -37,15 +37,18 @@ public class UserMapper
 
     @Override
     protected void mapSpecificFields(UserDTO source, User destination) {
-        if (!Objects.isNull(source.getBookRentInfosIds())) {
-            destination.setBookRentInfos(new HashSet<>(bookRentInfoRepository.findAllById(source.getBookRentInfosIds())));
-        } else destination.setBookRentInfos(Collections.emptySet());
+        if (!Objects.isNull(source.getUserBooksRent())) {
+            destination.setBookRentInfos(new HashSet<>(bookRentInfoRepository.findAllById(source.getUserBooksRent())));
+        } else {
+            destination.setBookRentInfos(Collections.emptySet());
+        }
         destination.setBirthDate(DateFormatter.formatStringToDate(source.getBirthDate()));
+
     }
 
     @Override
     protected void mapSpecificFields(User source, UserDTO destination) {
-        destination.setBookRentInfosIds(getIds(source));
+        destination.setUserBooksRent(getIds(source));
     }
 
     @Override

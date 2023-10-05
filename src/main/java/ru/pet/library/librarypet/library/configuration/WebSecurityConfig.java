@@ -71,8 +71,6 @@ public class WebSecurityConfig {
             return http.build();
     }
 
-
-
     @Autowired
     protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(customUserDetailsService).passwordEncoder(bCryptPasswordEncoder);

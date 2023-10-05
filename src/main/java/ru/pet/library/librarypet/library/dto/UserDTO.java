@@ -1,6 +1,7 @@
 package ru.pet.library.librarypet.library.dto;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,6 +13,7 @@ import java.util.Set;
 
 @Getter @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class UserDTO
         extends GenericDTO{
     private String login;
@@ -24,5 +26,5 @@ public class UserDTO
     private String phone;
     private String address;
     private RoleDTO role;
-    private Set<Long> bookRentInfosIds;
+    private Set<Long> userBooksRent;
 }

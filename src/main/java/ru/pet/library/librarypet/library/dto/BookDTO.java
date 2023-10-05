@@ -27,6 +27,7 @@ public class BookDTO
     private String storagePlace;
 
     private String onlineCopy;
+    private String publish;
 
     private String description;
 
