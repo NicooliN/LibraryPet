@@ -37,12 +37,7 @@ public class BookWithAuthorsMapper
 
     @Override
     protected void mapSpecificFields(BookWithAuthorsDTO source, Book destination) {
-        if(!Objects.isNull(source.getAuthorsIds())) {
-            destination.setAuthors(new HashSet<>(authorRepository.findAllById(source.getAuthorsIds())));
-        }
-        else {
-            destination.setAuthors(Collections.emptySet());
-        }
+        destination.setAuthors(new HashSet<>(authorRepository.findAllById(source.getAuthorsIds())));
     }
 
     @Override
