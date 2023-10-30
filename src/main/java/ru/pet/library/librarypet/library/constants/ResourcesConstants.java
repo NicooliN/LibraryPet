@@ -16,7 +16,9 @@ public interface ResourcesConstants {
 
     final List<String> BOOKS_PERMISSION_LIST =List.of("/books/add",
             "/books/update",
-            "/books/delete");
+            "/books/delete",
+            "/books/delete",
+            "/books/download/{bookId}");
 
      final List<String> USERS_WHITE_LIST = List.of("/login",
              "/users/registration",

@@ -11,13 +11,7 @@ public class LoginController {
 
     @GetMapping("/login")
     public String login() {
-        if (
-                SecurityContextHolder.getContext().getAuthentication() != null &&
-                        SecurityContextHolder.getContext().getAuthentication().isAuthenticated() &&
-                        !(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken)
-        ) {
-            return "redirect:registration";
-        }
         return "login";
     }
-}
+    }
+

@@ -6,6 +6,7 @@ import ru.pet.library.librarypet.library.dto.BookDTO;
 import ru.pet.library.librarypet.library.dto.GenericDTO;
 import ru.pet.library.librarypet.library.dto.BookDTO;
 
+import ru.pet.library.librarypet.library.exception.MyDeleteException;
 import ru.pet.library.librarypet.library.mapper.GenericMapper;
 import ru.pet.library.librarypet.library.model.GenericModel;
 import ru.pet.library.librarypet.library.repository.GenericRepository;
@@ -43,7 +44,7 @@ public abstract class GenericService<E extends GenericModel, D extends GenericDT
         return genericMapper.toDto(genericRepository.save(genericMapper.toEntity(newObject)));
     }
 
-    public void delete(Long id) {
+    public void delete(Long id) throws MyDeleteException {
         genericRepository.deleteById(id);
     }
 }

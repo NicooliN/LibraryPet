@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.util.Set;
 
 @Entity
+
 @Table(name = "users",
         uniqueConstraints = {@UniqueConstraint(name = "uniqueEmail", columnNames = "email"),
                 @UniqueConstraint(name = "uniqueLogin", columnNames = "login")})
@@ -47,6 +48,9 @@ public class User extends GenericModel {
 
     @Column(name = "address")
     private String address;
+
+    @Column(name = "change_password_token")
+    private String changePasswordToken;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "role_id", nullable = false,

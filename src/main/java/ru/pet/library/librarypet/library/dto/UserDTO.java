@@ -18,6 +18,7 @@ public class UserDTO
         extends GenericDTO{
     private String login;
     private String password;
+    private String changePasswordToken;
     private String email;
     private String birthDate;
     private String firstName;

@@ -11,12 +11,13 @@
 </head>
 <body>
 <main class="content-wrapper">
-    <div th:replace="~{header :: header}"></div>
-    <div class="container">
-        <div layout:fragment="content">
-            <h1>Static content for prototyping purposes only</h1>
+    <header th:replace="~{fragments/header :: header}"></header>
+    <main class="content-wrapper">
+        <div class="container mt-5 pt-4" style="margin-bottom: 70px">
+            <div layout:fragment="content">
+                <h1>Static content for prototyping purposes only</h1>
+            </div>
         </div>
-    </div>
 </main>
 </body>
 </html>
