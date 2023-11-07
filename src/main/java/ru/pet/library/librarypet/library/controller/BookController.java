@@ -1,5 +1,6 @@
 package ru.pet.library.librarypet.library.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -10,10 +11,14 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
+import ru.pet.library.librarypet.library.dto.AuthorDTO;
 import ru.pet.library.librarypet.library.dto.BookDTO;
 import ru.pet.library.librarypet.library.dto.BookSearchDTO;
 import ru.pet.library.librarypet.library.dto.BookWithAuthorsDTO;
@@ -27,6 +32,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+
+import static ru.pet.library.librarypet.library.constants.UserRolesConstants.ADMIN;
 
 @Controller
 @Slf4j
@@ -43,10 +50,19 @@ public class BookController
     @GetMapping("")
             public String getAll(@RequestParam(value = "page", defaultValue = "1") int page,
                                  @RequestParam(value = "size", defaultValue = "5") int pageSize,
+                                 @ModelAttribute(name = "exception") final String exception,
                                  Model model) {
         PageRequest pageRequest = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.ASC, "bookTitle"));
-        Page<BookWithAuthorsDTO> result = bookService.getAllBooksWithAuthors(pageRequest);
+        Page<BookWithAuthorsDTO> result;
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (ADMIN.equalsIgnoreCase(userName)) {
+            result = bookService.getAllBooksWithAuthors(pageRequest);
+        }
+        else {
+            result = bookService.getAllNotDeletedBooksWithAuthors(pageRequest);
+        }
         model.addAttribute("books", result);
+        model.addAttribute("exception", exception);
         return "books/viewAllBooks";
     }
             @GetMapping("/{id}")
@@ -91,13 +107,8 @@ public class BookController
             }
 
             @GetMapping("/delete/{id}")
-            public String delete(@PathVariable Long id) {
-                try {
-                    bookService.delete(id);
-                } catch (MyDeleteException e) {
-                 log.error("BookController####delete(): {}", e.getMessage());
-                return "redirect:/error/error-message?message=" + e.getLocalizedMessage();
-                }
+            public String delete(@PathVariable Long id) throws MyDeleteException {
+                bookService.delete(id);
                 return "redirect:/books";
             }
 
@@ -110,6 +121,17 @@ public class BookController
                 model.addAttribute("books", bookService.findBooks(bookSearchDTO, pageRequest));
                 return "books/viewAllBooks";
             }
+
+            @PostMapping("/search/author")
+            public String searchBooks(@RequestParam(value = "page", defaultValue = "1") int page,
+                                      @RequestParam(value = "size", defaultValue = "5") int pageSize,
+                                      @ModelAttribute("authorSearchForm") AuthorDTO authorDTO,
+                                      Model model) {
+                BookSearchDTO bookSearchDTO = new BookSearchDTO();
+                bookSearchDTO.setAuthorFio(authorDTO.getAuthorFio());
+                return searchBooks(page, pageSize, bookSearchDTO, model);
+            }
+
 
             @GetMapping(value = "/download", produces = MediaType.MULTIPART_FORM_DATA_VALUE)
             @ResponseBody
@@ -132,6 +154,20 @@ public class BookController
                 headers.add("Expires", "0");
                 return headers;
             }
+            @GetMapping("/restore/{id}")
+            public String restore(@PathVariable Long id) {
+                bookService.restore(id);
+                return "redirect:/books";
+            }
+            @ExceptionHandler(MyDeleteException.class)
+            public RedirectView handleError(HttpServletRequest req,
+                                            Exception ex,
+                                            RedirectAttributes redirectAttributes) {
+                log.error("Запрос: " + req.getRequestURL() + " вызвал ошибку " + ex.getMessage());
+                redirectAttributes.addFlashAttribute("exception", ex.getMessage());
+                return new RedirectView("/books", true);
+            }
+
 }
 
 

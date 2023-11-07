@@ -1,5 +1,9 @@
 package ru.pet.library.librarypet.library.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 import ru.pet.library.librarypet.library.dto.BookDTO;
@@ -33,7 +37,11 @@ public abstract class GenericService<E extends GenericModel, D extends GenericDT
     public D getOne(final Long id) {
         return genericMapper.toDto(genericRepository.findById(id).orElseThrow(() -> new NotFoundException("Данных по " + id + " нету")));
     }
-
+    public Page<D> listAll(Pageable pageable) {
+        Page<E> objects = genericRepository.findAll(pageable);
+        List<D> result = genericMapper.toDtos(objects.getContent());
+        return new PageImpl<>(result, pageable, objects.getTotalElements());
+    }
     public D create(D newObject) {
     newObject.setCreatedBy("ADMIN");
     newObject.setCreatedWhen(LocalDateTime.now());
@@ -46,5 +54,17 @@ public abstract class GenericService<E extends GenericModel, D extends GenericDT
 
     public void delete(Long id) throws MyDeleteException {
         genericRepository.deleteById(id);
+    }
+
+    public void markAsDeleted(GenericModel genericModel) {
+        genericModel.setDeleted(true);
+        genericModel.setDeletedWhen(LocalDateTime.now());
+        genericModel.setDeletedBy(SecurityContextHolder.getContext().getAuthentication().getName());
+    }
+
+    public void unMarkAsDeleted(GenericModel genericModel) {
+        genericModel.setDeleted(false);
+        genericModel.setDeletedWhen(null);
+        genericModel.setDeletedBy(null);
     }
 }

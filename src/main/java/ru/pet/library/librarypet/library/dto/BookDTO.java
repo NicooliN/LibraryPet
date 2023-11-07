@@ -27,6 +27,7 @@ public class BookDTO
     private String storagePlace;
 
     private String onlineCopyPath;
+
     private String publish;
 
     private String description;
@@ -34,4 +35,6 @@ public class BookDTO
     private Genre genre;
 
     private Set<Long> authorsIds;
+
+    private boolean isDeleted;
 }

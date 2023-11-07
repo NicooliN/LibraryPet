@@ -9,21 +9,21 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import static jakarta.servlet.RequestDispatcher.ERROR_REQUEST_URI;
+import static jakarta.servlet.RequestDispatcher.ERROR_STATUS_CODE;
+
 @Controller
 @Slf4j
 public class MyErrorController
         implements ErrorController {
-        @RequestMapping("/error")
-        public String handlerError(HttpServletRequest httpServletRequest) {
-            log.error("Ошибка {}",
-                    httpServletRequest.getAttribute(RequestDispatcher.ERROR_STATUS_CODE));
-            return "error";
-        }
-
-        @RequestMapping("/error/error-message")
-        public String handlerError(@RequestParam(value = "message") String message,
-                                   Model model) {
-            model.addAttribute("message", message);
-            return "error";
-        }
+    @RequestMapping("/error")
+    public String handleError(HttpServletRequest httpServletRequest,
+                              Model model) {
+        log.error("Случилась беда! Ошибка {}",
+                httpServletRequest.getAttribute(ERROR_STATUS_CODE));
+        model.addAttribute("exception",
+                "Ошибка " + httpServletRequest.getAttribute(ERROR_STATUS_CODE) + " в маппинге " +
+                        httpServletRequest.getAttribute(ERROR_REQUEST_URI));
+        return "error";
+    }
 }

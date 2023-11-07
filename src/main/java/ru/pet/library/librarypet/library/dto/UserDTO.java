@@ -28,4 +28,5 @@ public class UserDTO
     private String address;
     private RoleDTO role;
     private Set<Long> userBooksRent;
+    private boolean isDeleted;
 }

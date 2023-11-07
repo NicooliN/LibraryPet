@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
@@ -19,8 +20,7 @@ import ru.pet.library.librarypet.library.service.userdetails.CustomUserDetailsSe
 import java.util.Arrays;
 
 import static ru.pet.library.librarypet.library.constants.ResourcesConstants.*;
-import static ru.pet.library.librarypet.library.constants.UserRolesConstants.ADMIN;
-import static ru.pet.library.librarypet.library.constants.UserRolesConstants.LIBRARIAN;
+import static ru.pet.library.librarypet.library.constants.UserRolesConstants.*;
 
 @Configuration
 @EnableWebSecurity
@@ -48,13 +48,16 @@ public class WebSecurityConfig {
 
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
             http
-                    .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                    )
+                    .cors(AbstractHttpConfigurer::disable)
+                    .csrf(AbstractHttpConfigurer::disable)
                     .authorizeHttpRequests((requests) -> requests
                             .requestMatchers(RESOURCES_WHITE_LIST.toArray(String[]::new)).permitAll()
                             .requestMatchers(BOOKS_WHITE_LIST.toArray(String[]::new)).permitAll()
+                            .requestMatchers(AUTHORS_WHITE_LIST.toArray(String[]::new)).permitAll()
                             .requestMatchers(USERS_WHITE_LIST.toArray(String[]::new)).permitAll()
                             .requestMatchers(BOOKS_PERMISSION_LIST.toArray(String[]::new)).hasAnyRole(ADMIN, LIBRARIAN)
+                            .requestMatchers(AUTHORS_PERMISSION_LIST.toArray(String[]::new)).hasAnyRole(ADMIN, LIBRARIAN)
+                            .requestMatchers(USERS_PERMISSION_LIST.toArray(String[]::new)).hasAnyRole(LIBRARIAN, USER)
                             .anyRequest().authenticated()
                     )
                     .formLogin((form) -> form.loginPage("/login")

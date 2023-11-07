@@ -20,10 +20,22 @@ public interface ResourcesConstants {
             "/books/delete",
             "/books/download/{bookId}");
 
-     final List<String> USERS_WHITE_LIST = List.of("/login",
+    List<String> AUTHORS_WHITE_LIST = List.of("/authors",
+            "/authors/search",
+            "/books/search/author",
+            "/authors/{id}");
+
+    List<String> AUTHORS_PERMISSION_LIST = List.of("/authors/add",
+            "/authors/update",
+            "/authors/delete");
+
+    final List<String> USERS_WHITE_LIST = List.of("/login",
              "/users/registration",
              "/users/remember-password",
              "/users/change-password");
+    List<String> USERS_PERMISSION_LIST = List.of("/rent/book/*");
+
+
 
 
 }

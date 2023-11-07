@@ -9,6 +9,7 @@ import ru.pet.library.librarypet.library.model.Author;
 import ru.pet.library.librarypet.library.model.Book;
 import ru.pet.library.librarypet.library.model.GenericModel;
 import ru.pet.library.librarypet.library.repository.BookRepository;
+import ru.pet.library.librarypet.library.utils.DateFormatter;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -32,7 +33,8 @@ public class AuthorMapper
         modelMapper.createTypeMap(Author.class, AuthorDTO.class)
                 .addMappings(m -> m.skip(AuthorDTO::setBooksIds)).setPostConverter(toDTOConverter());
         modelMapper.createTypeMap(AuthorDTO.class, Author.class)
-                .addMappings(m -> m.skip(Author::setBooks)).setPostConverter(toEntityConverter());
+                .addMappings(m -> m.skip(Author::setBooks)).setPostConverter(toEntityConverter())
+                .addMappings(m -> m.skip(Author::setBirthDate)).setPostConverter(toEntityConverter());
     }
     @Override
     protected void mapSpecificFields(AuthorDTO source, Author destination) {
@@ -42,6 +44,7 @@ public class AuthorMapper
         else {
             destination.setBooks(Collections.emptySet());
         }
+        destination.setBirthDate(DateFormatter.formatStringToDate(source.getBirthDate()));
     }
 
     @Override

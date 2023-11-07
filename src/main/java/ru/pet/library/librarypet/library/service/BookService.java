@@ -1,5 +1,6 @@
 package ru.pet.library.librarypet.library.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -7,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.webjars.NotFoundException;
+import ru.pet.library.librarypet.library.constants.Errors;
 import ru.pet.library.librarypet.library.dto.BookDTO;
 import ru.pet.library.librarypet.library.dto.BookSearchDTO;
 import ru.pet.library.librarypet.library.dto.BookWithAuthorsDTO;
@@ -21,6 +23,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@Slf4j
 public class BookService
         extends GenericService<Book, BookDTO> {
 
@@ -50,6 +53,7 @@ public class BookService
                 bookSearchDTO.getAuthorFio(),
                 pageable
         );
+
         List<BookWithAuthorsDTO> result = bookWithAuthorsMapper.toDtos(booksPaginated.getContent());
         return new PageImpl<>(result, pageable, booksPaginated.getTotalElements());
     }
@@ -75,11 +79,33 @@ public class BookService
 
     @Override
     public void delete(Long id) throws MyDeleteException {
-        Book book = genericRepository.findById(id).orElseThrow(() -> new NotFoundException("not found book with ID" + id ));
-        if (!book.getBookRentInfos().isEmpty()) {
-            throw new MyDeleteException("Book not have to delete, it is rent");
-        } else  {
-            genericRepository.deleteById(book.getId());
+        Book book = genericRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Книги с заданным ID=" + id + " не существует"));
+//        boolean bookCanBeDeleted = repository.findBookByIdAndBookRentInfosReturnedFalseAndIsDeletedFalse(id) == null;
+        boolean bookCanBeDeleted = bookRepository.checkBookForDeletion(id);
+        if (bookCanBeDeleted) {
+            if (book.getOnlineCopyPath() != null && !book.getOnlineCopyPath().isEmpty()) {
+                FileHelper.deleteFile(book.getOnlineCopyPath());
+            }
+            markAsDeleted(book);
+            genericRepository.save(book);
+        }
+        else {
+            throw new MyDeleteException(Errors.Books.BOOK_DELETE_ERROR);
         }
     }
+
+    public Page<BookWithAuthorsDTO> getAllNotDeletedBooksWithAuthors(Pageable pageable) {
+        Page<Book> booksPaginated = bookRepository.findAllByIsDeletedFalse(pageable);
+        List<BookWithAuthorsDTO> result = bookWithAuthorsMapper.toDtos(booksPaginated.getContent());
+        return new PageImpl<>(result, pageable, booksPaginated.getTotalElements());
+    }
+
+    public void restore(Long objectId) {
+        Book book = genericRepository.findById(objectId).orElseThrow(
+                () -> new NotFoundException("Книги с заданным ID=" + objectId + " не существует"));
+        unMarkAsDeleted(book);
+        genericRepository.save(book);
+    }
+
 }
