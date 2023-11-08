@@ -62,7 +62,9 @@ public class AuthorService
         if (authorCanBeDeleted) {
             markAsDeleted(author);
             Set<Book> books = author.getBooks();
+            if (books != null && !books.isEmpty()) {
             books.forEach(this::markAsDeleted);
+            }
             authorRepository.save(author);
         }
         else {
@@ -75,7 +77,9 @@ public class AuthorService
                 () -> new NotFoundException("Автора с заданным id=" + objectId + " не существует."));
         unMarkAsDeleted(author);
         Set<Book> books = author.getBooks();
-        books.forEach(this::unMarkAsDeleted);
+        if (books != null && !books.isEmpty()) {
+            books.forEach(this::unMarkAsDeleted);
+        }
         authorRepository.save(author);
     }
 
