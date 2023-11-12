@@ -8,3 +8,10 @@ services:
       - 'POSTGRES_USER=user'
     ports:
       - '5432:5432'
+    networks:
+      library-network:
+        aliases:
+          - library
+networks:
+  library-network:
+    name: 'our_library_network'

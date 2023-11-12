@@ -1,0 +1,20 @@
+version: "3.9"
+services:
+  deploy:
+    container_name: libraryPetApp
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://libraryPet:5432/library_db
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_DATASOURCE_PASSWORD=secret
+    networks:
+      library-network:
+        aliases:
+          - libraryPet
+networks:
+  library-network:
+    name: 'our_library_network'
